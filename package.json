@@ -1,0 +1,50 @@
+{
+  "name": "ledger-pos",
+  "version": "1.0.0",
+  "description": "Photo-scan POS system — local backend, admin panel, offline-capable frontend",
+  "main": "electron/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "electron": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "electron": "^31.3.0",
+    "electron-builder": "^24.13.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "build": {
+    "appId": "com.ledgerpos.app",
+    "productName": "Ledger POS",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "electron/**",
+      "server/**",
+      "public/**",
+      "package.json",
+      "!data/**"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ledger POS"
+    }
+  }
+}
