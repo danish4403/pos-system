@@ -98,6 +98,7 @@ router.post('/', requireAdmin, (req, res) => {
   const employee = db.getEmployees().find((e) => e.id === body.employeeId && e.active !== false);
   if (!employee) return res.status(400).json({ error: 'Select an active employee' });
   if (!validDate(body.date)) return res.status(400).json({ error: 'A valid attendance date is required' });
+  if (body.date !== today()) return res.status(400).json({ error: 'Attendance can only be marked for today' });
   if (!statuses.has(body.status)) return res.status(400).json({ error: 'Invalid attendance status' });
   const rows = db.getAttendance();
   if (rows.some((r) => r.employeeId === employee.id && r.date === body.date)) return res.status(409).json({ error: 'Attendance already exists for this employee and date' });
@@ -137,6 +138,7 @@ router.delete('/special-days/:id', requireAdmin, (req, res) => { db.setSpecialDa
 router.put('/:id', requireAdmin, (req, res) => {
   const rows = db.getAttendance(); const row = rows.find((r) => r.id === req.params.id);
   if (!row) return res.status(404).json({ error: 'Attendance record not found' });
+  if (row.date !== today()) return res.status(400).json({ error: 'Attendance can only be changed for today' });
   const body = req.body || {};
   if (body.status !== undefined && !statuses.has(body.status)) return res.status(400).json({ error: 'Invalid attendance status' });
   if (body.status !== undefined) row.status = body.status;
