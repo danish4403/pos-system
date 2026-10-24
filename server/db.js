@@ -34,6 +34,7 @@ const DEFAULT_SETTINGS = {
   defaultMarginPercent: 30,
   currencySymbol: '₹',
   shopName: 'My Shop',
+  businessOwnerName: '',
   shopAddress: '',
   shopPhone: '',
   welcomeMessage: 'Welcome! Ready when you are.',
@@ -48,6 +49,8 @@ const DEFAULT_SETTINGS = {
   shopTagline: '',
   storeLogo: null,
   frequentGridColumns: 4,
+  showFrequentItemsGrid: true,
+  setupComplete: false,
   receiptWidth: 'standard', // 'narrow' | 'standard' | 'wide'
   maxEmployeeDiscountPercent: 10, // discounts above this need manager approval
   attendanceMode: 'automatic',
@@ -88,10 +91,101 @@ function writeJson(file, data) {
   fs.renameSync(tmp, file);
 }
 
+function resetAllData() {
+  const freshSettings = Object.assign({}, settings, {
+    adminPasswordHash: null,
+    adminPasswordSalt: null,
+    setupComplete: false,
+  });
+  const freshData = {
+    inventory: [],
+    sales: [],
+    settings: freshSettings,
+    discountApprovals: [],
+    employees: [],
+    customers: [],
+    expenses: [],
+    dailyClosings: [],
+    attendance: [],
+    specialDays: [],
+    salaryAdjustments: [],
+  };
+  const token = `${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const stagedFiles = Object.entries(freshData).map(([key, value]) => ({
+    destination: FILES[key],
+    tempFile: `${FILES[key]}.reset-${token}`,
+    backupFile: `${FILES[key]}.backup-${token}`,
+    existed: fs.existsSync(FILES[key]),
+    replaced: false,
+    value,
+  }));
+
+  const removeTemporaryFiles = (files) => {
+    const errors = [];
+    files.forEach(({ tempFile, backupFile }) => {
+      [tempFile, backupFile].forEach((file) => {
+        try {
+          if (fs.existsSync(file)) fs.unlinkSync(file);
+        } catch (error) {
+          errors.push(`${file}: ${error.message}`);
+        }
+      });
+    });
+    return errors;
+  };
+
+  try {
+    stagedFiles.forEach(({ destination, tempFile, backupFile, existed, value }) => {
+      if (existed) fs.copyFileSync(destination, backupFile);
+      fs.writeFileSync(tempFile, JSON.stringify(value, null, 2), 'utf8');
+    });
+    stagedFiles.forEach((file) => {
+      fs.renameSync(file.tempFile, file.destination);
+      file.replaced = true;
+    });
+  } catch (error) {
+    const rollbackErrors = [];
+    stagedFiles.slice().reverse().forEach(({ destination, backupFile, existed, replaced }) => {
+      if (!replaced) return;
+      try {
+        if (existed) fs.copyFileSync(backupFile, destination);
+        else if (fs.existsSync(destination)) fs.unlinkSync(destination);
+      } catch (rollbackError) {
+        rollbackErrors.push(`${destination}: ${rollbackError.message}`);
+      }
+    });
+    const cleanupErrors = removeTemporaryFiles(stagedFiles);
+    if (rollbackErrors.length || cleanupErrors.length) {
+      throw new Error(`Reset failed: ${error.message}; rollback errors: ${rollbackErrors.join('; ') || 'none'}; cleanup errors: ${cleanupErrors.join('; ') || 'none'}`, { cause: error });
+    }
+    throw error;
+  }
+
+  const cleanupErrors = removeTemporaryFiles(stagedFiles);
+  if (cleanupErrors.length) console.error(`Data reset completed, but temporary-file cleanup failed: ${cleanupErrors.join('; ')}`);
+
+  inventory = freshData.inventory;
+  sales = freshData.sales;
+  settings = freshSettings;
+  discountApprovals = freshData.discountApprovals;
+  employees = freshData.employees;
+  customers = freshData.customers;
+  expenses = freshData.expenses;
+  dailyClosings = freshData.dailyClosings;
+  attendance = freshData.attendance;
+  specialDays = freshData.specialDays;
+  salaryAdjustments = freshData.salaryAdjustments;
+}
+
 // ---- in-memory cache, write-through to disk on every mutation ----
 let inventory = readJson(FILES.inventory, []);
 let sales = readJson(FILES.sales, []);
-let settings = Object.assign({}, DEFAULT_SETTINGS, readJson(FILES.settings, {}));
+const storedSettings = readJson(FILES.settings, {});
+let settings = Object.assign({}, DEFAULT_SETTINGS, storedSettings);
+if (!Object.prototype.hasOwnProperty.call(storedSettings, 'setupComplete')) {
+  settings.setupComplete = !!(settings.adminPasswordHash && settings.adminPasswordSalt);
+  if (fs.existsSync(FILES.settings)) writeJson(FILES.settings, settings);
+}
 if (!fs.existsSync(FILES.settings)) writeJson(FILES.settings, settings);
 let discountApprovals = readJson(FILES.discountApprovals, []);
 let employees = readJson(FILES.employees, []);
@@ -131,6 +225,8 @@ let specialDays = readJson(FILES.specialDays, []);
 let salaryAdjustments = readJson(FILES.salaryAdjustments, []);
 
 module.exports = {
+  resetAllData,
+
   // ---- inventory ----
   getInventory: () => inventory,
   setInventory: (next) => { inventory = next; writeJson(FILES.inventory, inventory); },

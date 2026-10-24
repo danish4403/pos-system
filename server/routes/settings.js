@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
   const response = {
     currencySymbol: s.currencySymbol,
     shopName: s.shopName,
+    businessOwnerName: s.businessOwnerName,
     shopAddress: s.shopAddress,
     shopPhone: s.shopPhone,
     storeLogo: s.storeLogo,
@@ -31,9 +32,10 @@ router.get('/', (req, res) => {
     backgroundImages,
     billFooterMessage: s.billFooterMessage,
     uiFontSize: s.uiFontSize,
-    accentColor: s.accentColor, theme: s.theme, language: s.language, shopTagline: s.shopTagline, frequentGridColumns: s.frequentGridColumns,
+    accentColor: s.accentColor, theme: s.theme, language: s.language, shopTagline: s.shopTagline, frequentGridColumns: s.frequentGridColumns, showFrequentItemsGrid: s.showFrequentItemsGrid !== false,
     receiptWidth: s.receiptWidth,
     defaultMarginPercent: s.defaultMarginPercent,
+    setupComplete: !!s.setupComplete,
     // Cashiers need to know the limit to explain why checkout is blocking
     // them, but the value itself isn't sensitive.
     maxEmployeeDiscountPercent: s.maxEmployeeDiscountPercent,
@@ -55,9 +57,9 @@ const MAX_IMAGE_CHARS = 2_500_000; // ~1.8MB decoded — plenty for a resized ph
 
 router.put('/', requireAdmin, (req, res) => {
   const {
-    currencySymbol, shopName, shopAddress, shopPhone, additionalPhone, welcomeMessage,
+    currencySymbol, shopName, businessOwnerName, shopAddress, shopPhone, additionalPhone, welcomeMessage,
     backgroundImages, billFooterMessage, uiFontSize, accentColor, receiptWidth,
-    defaultMarginPercent, maxEmployeeDiscountPercent, anthropicApiKey, theme, language, shopTagline, frequentGridColumns, storeLogo,
+    defaultMarginPercent, maxEmployeeDiscountPercent, anthropicApiKey, theme, language, shopTagline, frequentGridColumns, showFrequentItemsGrid, storeLogo,
     businessCity, businessState, businessPinCode, businessEmail, gstin, legalBusinessName, tradeName, panNumber, businessRegistrationNumber, gstRegistrationStatus, defaultGstRate, msmeUdyamNumber, shopEstablishmentNumber,
     invoicePrefix, startingInvoiceNumber, invoiceTitle, invoiceFontSize, returnAllowed, returnWindowDays, returnConditions, exchangeAllowed, exchangeWindowDays, exchangeConditions, termsAndConditions, showPoliciesOnInvoice,
     upiId, bankName, accountHolderName, accountNumber, ifscCode, showPaymentDetailsOnInvoice, website, instagram, facebook, googleBusinessLink, showOnlineDetailsOnInvoice, invoiceDisplay,
@@ -65,6 +67,7 @@ router.put('/', requireAdmin, (req, res) => {
   const next = {};
   if (currencySymbol !== undefined) next.currencySymbol = String(currencySymbol).slice(0, 4);
   if (shopName !== undefined) next.shopName = String(shopName).slice(0, 60);
+  if (businessOwnerName !== undefined) next.businessOwnerName = String(businessOwnerName).trim().slice(0, 100);
   if (shopAddress !== undefined) next.shopAddress = String(shopAddress).slice(0, 200);
   if (shopPhone !== undefined) {
     const raw = String(shopPhone).trim();
@@ -93,6 +96,7 @@ router.put('/', requireAdmin, (req, res) => {
   if (shopTagline !== undefined) next.shopTagline = String(shopTagline).slice(0, 100);
   if (storeLogo !== undefined) next.storeLogo = typeof storeLogo === 'string' && storeLogo.startsWith('data:image/') ? storeLogo.slice(0, MAX_IMAGE_CHARS) : null;
   if (frequentGridColumns !== undefined) next.frequentGridColumns = Math.max(2, Math.min(8, Number(frequentGridColumns) || 4));
+  if (showFrequentItemsGrid !== undefined) next.showFrequentItemsGrid = !!showFrequentItemsGrid;
   if (receiptWidth !== undefined && RECEIPT_WIDTHS.includes(receiptWidth)) next.receiptWidth = receiptWidth;
   if (defaultMarginPercent !== undefined) next.defaultMarginPercent = Number(defaultMarginPercent) || 0;
   if (maxEmployeeDiscountPercent !== undefined) next.maxEmployeeDiscountPercent = Math.max(0, Math.min(100, Number(maxEmployeeDiscountPercent) || 0));
@@ -139,6 +143,28 @@ router.put('/', requireAdmin, (req, res) => {
   if (invoiceDisplay !== undefined && invoiceDisplay && typeof invoiceDisplay === 'object') next.invoiceDisplay = Object.assign({}, db.getSettings().invoiceDisplay || {}, Object.fromEntries(Object.entries(invoiceDisplay).map(([k,v]) => [k, !!v])));
   if (anthropicApiKey !== undefined) next.anthropicApiKey = anthropicApiKey ? String(anthropicApiKey).trim() : null;
   db.setSettings(next);
+  res.json({ ok: true });
+});
+
+router.post('/reset', requireAdmin, (req, res, next) => {
+  const { password, confirmation } = req.body || {};
+  if (confirmation !== 'DELETE ALL DATA') {
+    return res.status(400).json({ error: 'Type DELETE ALL DATA to confirm the reset.' });
+  }
+  if (typeof password !== 'string' || !auth.verifyAdminPassword(password)) {
+    return res.status(401).json({ error: 'Incorrect admin password' });
+  }
+
+  db.resetAllData();
+  req.session.destroy((error) => {
+    if (error) return next(error);
+    res.clearCookie('connect.sid');
+    res.json({ ok: true });
+  });
+});
+
+router.post('/complete-setup', requireAdmin, (req, res) => {
+  db.setSettings({ setupComplete: true });
   res.json({ ok: true });
 });
 

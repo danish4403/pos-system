@@ -51,6 +51,13 @@ The system combines traditional POS functionality with analytics and AI-powered 
 - Admin-only access to sensitive business information
 - Employee-specific permissions
 - Discount limits and controlled operations
+- Employee directory with Present/Absent quick actions, a collapsible weekly/monthly Attendance page for attendance records and attendance settings, and a separate Salary page for payroll and salary adjustments; attendance can only be marked or changed for today
+- Business profile details are editable from the Home page; general and appearance preferences are organized in separate Settings tabs
+- Frequent products on New Sale can be shown or hidden, and filtered by category
+- Login-aligned Home dashboard with live sales, stock, customer dues, recent activity, and quick alerts
+- Home-matched daily Dashboard for today's performance, month-to-month financials, actionable alerts, and sales trends; Business Intelligence provides hourly/daily line-chart comparisons and deeper product, category, customer, and stock analysis
+- Admin-only business data reset protected by password confirmation
+- Guided first-run and post-reset business setup
 
 ###  Modern Interface
 - Modern glassmorphism-inspired UI
@@ -59,6 +66,13 @@ The system combines traditional POS functionality with analytics and AI-powered 
 - Smooth interactions and animations
 - Clean retail-focused workflow
 - Electron-ready desktop environment
+
+The guided setup page appears when creating the first admin account and after a
+data reset. The reset permanently deletes business records and the admin
+password, while preserving the shop profile, theme, appearance, and other
+settings. It requires the current admin password and the exact confirmation
+phrase `DELETE ALL DATA`; afterward, create a new admin password and finish the
+setup page before opening the workspace.
 
 ---
 
