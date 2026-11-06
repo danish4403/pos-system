@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Water bottle illustration">
+  <rect width="200" height="200" fill="#EDFAFF"/>
+  <rect x="76" y="25" width="48" height="22" rx="6" fill="#7EC8FF"/>
+  <rect x="64" y="48" width="72" height="106" rx="18" fill="#FFFFFF" stroke="#6FB8FF" stroke-width="4"/>
+  <rect x="73" y="73" width="54" height="35" rx="8" fill="#DFF4FF"/>
+  <path d="M77 94h46v18H77z" fill="#B9E6FF"/>
+  <path d="M88 57h24v18H88z" fill="#EAF9FF"/>
+  <path d="M90 116h20v20H90z" fill="#D9F4FF"/>
+  <circle cx="100" cy="93" r="11" fill="#A7DFFF" opacity="0.7"/>
+</svg>

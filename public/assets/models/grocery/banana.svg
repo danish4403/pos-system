@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Bananas illustration">
+  <rect width="200" height="200" fill="#F3FBEF"/>
+  <path d="M95 35c-18 11-28 30-26 49 2 15 12 28 29 36l5 3 5-3c18-9 28-23 30-40 2-19-7-34-21-43-4-2-9-6-22 2z" fill="#E6D77F"/>
+  <path d="M87 34c-19 12-34 34-35 62-1 22 12 41 36 53 11-6 19-16 23-30 5-19-1-35-11-49-5-8-7-17-13-36z" fill="#F5E78D"/>
+  <path d="M111 35c22 13 33 36 31 62-2 25-18 40-38 47 13-9 24-22 30-38 9-23 2-49-23-71z" fill="#D9CE63"/>
+  <path d="M65 57c20 7 34 13 44 25" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M82 53c8 15 21 23 31 28" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M103 50c12 17 24 24 36 31" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M80 146c-9 8-13 17-12 26" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M100 147c-3 9-2 18 3 28" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M119 149c9 6 15 15 15 25" stroke="#5A983A" stroke-width="5" stroke-linecap="round"/>
+</svg>

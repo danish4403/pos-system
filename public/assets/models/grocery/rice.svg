@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Rice bag illustration">
+  <rect width="200" height="200" fill="#F6F5F1"/>
+  <path d="M62 56h76v94c0 16-13 29-29 29H91c-16 0-29-13-29-29z" fill="#F7E4BC" stroke="#D7B46D" stroke-width="4"/>
+  <path d="M88 56h24v16H88z" fill="#E4C37E"/>
+  <path d="M74 114c10-18 25-28 26-28s15 10 26 28v18H74z" fill="#FFF6DB" opacity="0.82"/>
+  <circle cx="90" cy="96" r="6" fill="#F0D286"/>
+  <circle cx="109" cy="90" r="6" fill="#F0D286"/>
+  <circle cx="118" cy="109" r="6" fill="#F0D286"/>
+  <circle cx="80" cy="111" r="6" fill="#F0D286"/>
+  <path d="M63 88c8 2 14 3 20 3 2 0 4-1 4-2s-2-2-4-2c-7 0-13-1-20-3z" fill="#F0D286"/>
+  <path d="M122 78c9 3 15 5 18 5 3 0 5-1 5-3s-2-3-5-3c-6 0-12-2-18-4z" fill="#F0D286"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Milk carton illustration">
+  <rect width="200" height="200" fill="#EFF7FF"/>
+  <rect x="72" y="28" width="56" height="26" rx="8" fill="#B9D2F8"/>
+  <rect x="60" y="52" width="80" height="103" rx="18" fill="#FFFFFF" stroke="#9CC7FF" stroke-width="4"/>
+  <rect x="68" y="72" width="64" height="52" rx="10" fill="#E8F5FF"/>
+  <path d="M82 90c7-7 12-11 18-11 8 0 14 5 18 11v15c-6 6-12 9-18 9-7 0-13-3-18-9z" fill="#BFD9FF"/>
+  <path d="M86 84h28v16H86z" fill="#DDEEFF"/>
+  <path d="M85 101h30v10H85z" fill="#C9E5FF"/>
+  <path d="M78 155h44v14H78z" fill="#DCEBFF"/>
+  <path d="M58 74h14v70H58c-9 0-16-7-16-16V90c0-9 7-16 16-16z" fill="#B6CCFF" opacity="0.85"/>
+  <path d="M128 74h14v70h-14c-9 0-16-7-16-16V90c0-9 7-16 16-16z" fill="#AFC4F8" opacity="0.9"/>
+</svg>

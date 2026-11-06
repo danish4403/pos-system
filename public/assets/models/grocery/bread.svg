@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Bread loaf illustration">
+  <rect width="200" height="200" fill="#F8F3E6"/>
+  <path d="M52 124c0-35 25-62 48-62s48 27 48 62v18H52z" fill="#E7B56A"/>
+  <path d="M61 128c0-28 22-53 39-53s39 25 39 53v13H61z" fill="#F0C77D"/>
+  <path d="M69 118c11-16 25-26 31-26s20 10 31 26v12H69z" fill="#D88C43" opacity="0.55"/>
+  <path d="M80 85c10-11 18-14 20-14s11 3 20 14v20H80z" fill="#F7DD9E" opacity="0.8"/>
+  <path d="M65 147h70v18H65z" fill="#D88C43" opacity="0.7"/>
+  <path d="M92 62c-4-8-10-12-16-14 10-7 23-8 30-2 7 5 12 13 15 21-10 0-18 0-29-5z" fill="#F7E0A0"/>
+  <circle cx="62" cy="92" r="7" fill="#F4D28A" opacity="0.75"/>
+  <circle cx="138" cy="92" r="7" fill="#F4D28A" opacity="0.75"/>
+  <circle cx="100" cy="70" r="6" fill="#F4D28A" opacity="0.8"/>
+</svg>
